@@ -1,1 +1,98 @@
+backend:
+  name: git-gateway
+  branch: main
 
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "articulos"
+    label: "Artículos"
+    folder: "content/articulos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Resumen", name: "excerpt", widget: "text"}
+      - {label: "Autor", name: "author", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Categoría", name: "category", widget: "string", default: "📄 Artículo"}
+      - {label: "Tiempo de lectura", name: "readTime", widget: "string", default: "5 min"}
+      - {label: "Imagen", name: "image", widget: "image"}
+      - {label: "Contenido", name: "body", widget: "markdown"}
+
+  - name: "estudios"
+    label: "Estudios"
+    folder: "content/estudios"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Resumen", name: "excerpt", widget: "text"}
+      - {label: "Autor", name: "author", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Imagen", name: "image", widget: "image"}
+      - {label: "Contenido", name: "body", widget: "markdown"}
+
+  - name: "encuestas"
+    label: "Encuestas"
+    folder: "content/encuestas"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Título de la encuesta", name: "title", widget: "string"}
+      - {label: "Resumen ejecutivo", name: "excerpt", widget: "text", hint: "Breve descripción de los hallazgos principales"}
+      - {label: "Autor/Investigador principal", name: "author", widget: "string"}
+      - {label: "Fecha de publicación", name: "date", widget: "datetime"}
+      - {label: "Fecha de campo", name: "fieldDate", widget: "datetime", hint: "Cuándo se realizó el trabajo de campo"}
+      - {label: "Imagen/Gráfico principal", name: "image", widget: "image"}
+      - {label: "Metodología", name: "methodology", widget: "markdown", hint: "Describe: tamaño de muestra, método de muestreo, margen de error, etc."}
+      - {label: "Región/Ámbito", name: "region", widget: "string", hint: "Ej: Nacional, Ciudad de México, Zona Metropolitana, etc."}
+      - {label: "Contenido completo", name: "body", widget: "markdown", hint: "Resultados detallados, análisis, gráficos, conclusiones"}
+
+  - name: "videos"
+    label: "Videos y Podcast"
+    folder: "content/videos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Descripción", name: "description", widget: "text"}
+      - {label: "Autor/Conductor", name: "author", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Tipo", name: "type", widget: "select", options: ["🎥 Video", "🎙️ Podcast"], default: "🎥 Video"}
+      - {label: "Miniatura/Imagen", name: "image", widget: "image"}
+      - {label: "URL del video/podcast", name: "videoUrl", widget: "string", hint: "Pega aquí el link de YouTube, Vimeo, Spotify, Apple Podcasts, etc."}
+      - {label: "Duración", name: "duration", widget: "string", hint: "Ej: 15 min, 1 hora 30 min"}
+
+  - name: "libros"
+    label: "Libros"
+    folder: "content/libros"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Título del libro", name: "title", widget: "string"}
+      - {label: "Autor", name: "author", widget: "string"}
+      - {label: "Año de publicación", name: "year", widget: "number"}
+      - {label: "Portada", name: "cover", widget: "image"}
+      - {label: "Descripción/Reseña", name: "description", widget: "text"}
+      - {label: "URL de compra o descarga", name: "buyUrl", widget: "string", hint: "Link a Amazon, Google Books, PDF, etc."}
+      - {label: "Categoría", name: "category", widget: "string", hint: "Ej: Economía, Finanzas, Historia, etc."}
+
+  - name: "paginas"
+    label: "Páginas del sitio"
+    files:
+      - name: "hero"
+        label: "Portada principal"
+        file: "content/paginas/hero.yml"
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Subtítulo", name: "subtitle", widget: "string"}
+          - {label: "Imagen de portada", name: "image", widget: "image"}
+      - name: "sobre-nosotros"
+        label: "Sobre Nosotros"
+        file: "content/paginas/sobre-nosotros.yml"
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Contenido", name: "body", widget: "markdown"}
+          - {label: "Imagen del equipo", name: "teamImage", widget: "image"}
