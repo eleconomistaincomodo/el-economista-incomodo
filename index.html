@@ -9,6 +9,7 @@
     <title>El Economista Incómodo — Análisis Financiero Independiente</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -858,6 +859,17 @@
         checkSecureAccess();
     }
     document.addEventListener('DOMContentLoaded',init);
+
+    // Script de Netlify Identity para el panel de administración
+    if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+            if (!user) {
+                window.netlifyIdentity.on("login", () => {
+                    document.location.href = "/admin/";
+                });
+            }
+        });
+    }
     </script>
 </body>
 </html>
