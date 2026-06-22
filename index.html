@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -10,6 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="/fetch-content.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -370,9 +371,6 @@
     <a href="#" onclick="event.preventDefault();openAdminPanel();" class="admin-trigger">Acceso Editores</a>
 
     <script>
-    // ============================================
-    // CONFIGURACIÓN & STORAGE
-    // ============================================
     const defaultLegal = {
         legal: '<p>Titular: [TU NOMBRE], RFC: [TU RFC]. Este sitio opera como plataforma de difusión de contenidos económicos y financieros. No gestiona transacciones comerciales. Todo contenido es informativo y no constituye asesoramiento financiero.</p>',
         privacy: '<p>Responsable: [TU NOMBRE]. Recabamos: Nombre, Email, datos de navegación. No recabamos datos financieros sensibles. Derechos ARCO en [TU EMAIL].</p>',
@@ -382,7 +380,6 @@
     const defaultContacto = { email:'contacto@ejemplo.com', phone:'+52 55 1234 5678', address:'Ciudad de México, México', hours:'Lunes a viernes, 9:00 - 18:00', mapUrl:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.661608591548!2d-99.16869368509355!3d19.42702458688755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f5bd1563%3A0x6c366f0e2de02ff7!2sEl%20%C3%81ngel%20de%20la%20Independencia!5e0!3m2!1ses-419!2smx!4v1620000000000!5m2!1ses-419!2smx' };
     const defaultHero = { imageUrl:'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=2000&q=80', title:'El Economista<br><span class="text-gold-400">Incómodo</span>', subtitle:'Economía sin filtros ni agendas.' };
     
-    // SECCIONES CON URL DE IMAGEN PARA LOGOTIPO
     const defaultSections = [
         {id:'articulos',name:'Artículos',icon:'📊',iconImg:'',count:'42 publicados',navLabel:'Artículos',footerLabel:'Artículos',dropdownLabel:'📄 Artículo',heroTitle:'Artículos',heroSubtitle:'Análisis profundos sobre economía y finanzas'},
         {id:'estudios',name:'Estudios',icon:'🔬',iconImg:'',count:'18 publicados',navLabel:'Estudios',footerLabel:'Estudios',dropdownLabel:'🔬 Estudio',heroTitle:'Estudios',heroSubtitle:'Investigaciones rigurosas con datos verificables'},
@@ -413,21 +410,18 @@
     function load(key, def) { const s=localStorage.getItem(key); return s?JSON.parse(s):def; }
     function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
-    let contentDB = load('eei_content', { articulos:[{id:'d1',imageUrl:'',title:'Deuda pública: la bomba de relojería',excerpt:'Mientras prometen gasto sin límites...',author:'Dr. Alejandro Ruiz',date:'20 mayo 2026',category:'📄 Artículo',readTime:'12 min',content:'<p>La deuda pública ha superado el 115% del PIB.</p><h2>Los números</h2><p>Lo preocupante es la velocidad de crecimiento.</p>'}], podcast:[{id:'p1',imageUrl:'',title:'Episodio 1: La inflación oculta',excerpt:'Conversamos sobre el impacto real.',author:'María López',date:'18 mayo 2026',category:'🎙️ Podcast',duration:'45:23',content:'<p>En este episodio analizamos la inflación.</p>'}] });
-    let adsDB = load('eei_ads', [{id:'ad1',type:'banner-top',label:'Publicidad',emoji:'📊',title:'Curso Premium',description:'Domina los mercados.',url:'#',buttonText:'Inscríbete →',active:true,position:0},{id:'ad2',type:'inline',label:'Publicidad',emoji:'📊',title:'Curso Técnico',description:'40% descuento.',url:'#',buttonText:'Más info →',active:true,position:2}]);
+    let contentDB = load('eei_content', { articulos:[], podcast:[] });
+    let adsDB = load('eei_ads', []);
     let heroConfig = load('eei_heroConfig', defaultHero);
     let logoConfig = load('eei_logoConfig', { imageUrl: '' });
     let sectionConfig = load('eei_sections', defaultSections);
     let activeShareNetworks = load('eei_share_networks', ['whatsapp', 'twitter', 'linkedin', 'copy']);
-    let footerNetworks = load('eei_footer_networks', [{id:'f1',platform:'twitter',url:'https://twitter.com'}]);
+    let footerNetworks = load('eei_footer_networks', []);
     let legalTexts = load('eei_legal_texts', defaultLegal);
     let sobreTexto = load('eei_sobreTexto', defaultSobreTexto);
     let contactoConfig = load('eei_contacto', defaultContacto);
-    let colaboradores = load('eei_colaboradores', [{id:'c1',name:'Dr. Alejandro Ruiz',role:'Director',email:'ruiz@ejemplo.com',photo:'',bio:'Economista con 20 años de experiencia.'}]);
+    let colaboradores = load('eei_colaboradores', []);
 
-    // ============================================
-    // PWA & RSS
-    // ============================================
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBtn').classList.remove('hidden'); });
     function addToHomeScreen() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; document.getElementById('installBtn').classList.add('hidden'); }); } else { alert('Para agregar a inicio:\n\n📱 iOS: Compartir → "Agregar a pantalla de inicio"\n🤖 Android: Menú → "Agregar a pantalla de inicio"'); } }
@@ -445,9 +439,6 @@
         const a = document.createElement('a'); a.href = url; a.download = 'feed.xml'; a.click();
     }
 
-    // ============================================
-    // SEGURIDAD
-    // ============================================
     function getAdminPassword() { return localStorage.getItem('eei_admin_password') || DEFAULT_PASSWORD; }
     async function openAdminPanel() {
         if(sessionStorage.getItem('eei_admin_session')==='true') { enterAdminPanel(); return; }
@@ -483,9 +474,6 @@
     function changeAdminPassword() { const p=document.getElementById('newAdminPassword').value; if(p.length<4){alert('⚠️ Mínimo 4 caracteres');return;} localStorage.setItem('eei_admin_password',p); document.getElementById('newAdminPassword').value=''; alert('✅ Contraseña cambiada'); }
     function logAccessAttempt(s,d){const l=JSON.parse(localStorage.getItem('eei_access_logs')||'[]');l.unshift({timestamp:new Date().toISOString(),success:s,details:d});if(l.length>100)l.pop();localStorage.setItem('eei_access_logs',JSON.stringify(l));}
 
-    // ============================================
-    // PANEL TABS
-    // ============================================
     function switchAdminTab(tab){
         ['Content','Ads','Logo','Sections','Sharing','Social','Legal','Sobre','Contacto','Security'].forEach(t=>{ const el=document.getElementById('adminTab'+t); if(el) el.style.display='none'; });
         const target = document.getElementById('adminTab'+tab.charAt(0).toUpperCase()+tab.slice(1));
@@ -495,9 +483,6 @@
         });
     }
 
-    // ============================================
-    // LOGOTIPO PRINCIPAL
-    // ============================================
     function renderLogoAdmin() {
         document.getElementById('logoUrlInput').value = logoConfig.imageUrl || '';
         previewLogoAdmin();
@@ -539,9 +524,6 @@
         document.getElementById('footerLogo').innerHTML = h;
     }
 
-    // ============================================
-    // SECCIONES & NAVEGACIÓN
-    // ============================================
     function populateTypeDropdown() { document.getElementById('newType').innerHTML = sectionConfig.map(s=>`<option value="${s.id}">${s.dropdownLabel}</option>`).join(''); }
     function renderSectionsAdmin() {
         document.getElementById('sectionsConfigList').innerHTML = sectionConfig.map((s,i)=>`
@@ -576,9 +558,6 @@
         }).join(''); 
     }
 
-    // ============================================
-    // COMPARTIR & FOOTER REDES
-    // ============================================
     function populateShareDropdown() { document.getElementById('shareNetworkSelect').innerHTML = availableShareNetworks.map(n=>`<option value="${n.id}">${n.name}</option>`).join(''); }
     function addShareNetwork() {
         const id = document.getElementById('shareNetworkSelect').value;
@@ -615,14 +594,8 @@
         }).join('');
     }
 
-    // ============================================
-    // HERO
-    // ============================================
     function applyHeroConfig(){const h=document.getElementById('heroSection');h.style.backgroundImage=`linear-gradient(135deg,rgba(16,42,67,0.9) 0%,rgba(16,42,67,0.85) 50%,rgba(16,42,67,0.9) 100%), url('${heroConfig.imageUrl}')`;h.style.backgroundSize='cover';h.style.backgroundPosition='center';document.getElementById('heroTitle').innerHTML=heroConfig.title;document.getElementById('heroSubtitle').textContent=heroConfig.subtitle;}
 
-    // ============================================
-    // LEGAL
-    // ============================================
     function saveLegalTexts() {
         legalTexts = {
             legal: document.getElementById('legalTextEdit').value,
@@ -636,9 +609,6 @@
         alert('✅ Textos legales actualizados');
     }
 
-    // ============================================
-    // NOSOTROS & COLABORADORES
-    // ============================================
     function renderSobreAdmin(){document.getElementById('sobreTexto').value=sobreTexto;renderCollabList();}
     function saveSobreTexto(){sobreTexto=document.getElementById('sobreTexto').value;save('eei_sobreTexto',sobreTexto);alert('✅ Texto guardado');}
     function handleAddCollaborator(e){e.preventDefault();const editId=document.getElementById('editCollabId').value;const c={id:editId||Date.now().toString(),name:document.getElementById('collabName').value,role:document.getElementById('collabRole').value,email:document.getElementById('collabEmail').value||'',photo:document.getElementById('collabPhoto').value||'',bio:document.getElementById('collabBio').value};if(editId){const i=colaboradores.findIndex(x=>x.id===editId);if(i!==-1)colaboradores[i]=c;}else colaboradores.push(c);save('eei_colaboradores',colaboradores);cancelEditCollab();renderCollabList();alert(editId?'✅ Actualizado':'✅ Agregado');}
@@ -648,15 +618,9 @@
     function deleteCollaborator(id){if(confirm('¿Eliminar?')){colaboradores=colaboradores.filter(c=>c.id!==id);save('eei_colaboradores',colaboradores);renderCollabList();}}
     function previewCollabPhoto(){const u=document.getElementById('collabPhoto').value;const p=document.getElementById('collabPhotoPreview');if(u){p.querySelector('img').src=u;p.querySelector('img').onerror=()=>p.classList.add('hidden');p.classList.remove('hidden')}else p.classList.add('hidden');}
 
-    // ============================================
-    // CONTACTO
-    // ============================================
     function renderContactoAdmin(){document.getElementById('contactEmail').value=contactoConfig.email||'';document.getElementById('contactPhone').value=contactoConfig.phone||'';document.getElementById('contactAddress').value=contactoConfig.address||'';document.getElementById('contactHours').value=contactoConfig.hours||'';document.getElementById('contactMapUrl').value=contactoConfig.mapUrl||'';}
     function handleContactSave(e){e.preventDefault();contactoConfig={email:document.getElementById('contactEmail').value,phone:document.getElementById('contactPhone').value,address:document.getElementById('contactAddress').value,hours:document.getElementById('contactHours').value,mapUrl:document.getElementById('contactMapUrl').value};save('eei_contacto',contactoConfig);alert('✅ Contacto actualizado');}
 
-    // ============================================
-    // PUBLICIDAD
-    // ============================================
     function renderAdsList(){
         document.getElementById('adsList').innerHTML=adsDB.length===0?'<p class="text-navy-500 py-4 text-center">Sin anuncios.</p>':adsDB.map(ad=>`<div class="flex items-start gap-3 p-3 bg-navy-50 dark:bg-navy-800 rounded-lg ${!ad.active?'opacity-50':''}"><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="text-xs font-bold px-2 py-0.5 rounded bg-blue-500 text-white">${ad.type}</span><span class="text-xs text-navy-400">${ad.active?'🟢':'🔴'}</span></div><h4 class="text-sm font-semibold truncate">${ad.emoji} ${ad.title}</h4></div><label class="toggle-switch"><input type="checkbox" ${ad.active?'checked':''} onchange="toggleAdActive('${ad.id}',this.checked)"><span class="toggle-slider"></span></label><button onclick="editAd('${ad.id}')" class="text-xs text-blue-500">✏️</button><button onclick="deleteAd('${ad.id}')" class="text-xs text-red-500">🗑️</button></div>`).join('');
     }
@@ -667,9 +631,6 @@
     function cancelEditAd(){document.getElementById('addAdForm').reset();document.getElementById('editAdId').value='';document.getElementById('adPosition').value='2';document.getElementById('adActive').checked=true;document.getElementById('adSubmitBtn').textContent='Publicar';document.getElementById('adCancelBtn').classList.add('hidden');}
     function toggleAdFields(){document.getElementById('adPositionField').style.display=document.getElementById('adType').value==='inline'?'block':'none';}
 
-    // ============================================
-    // CONTENIDO
-    // ============================================
     function previewNewImage(){const u=document.getElementById('newImageUrl').value;const c=document.getElementById('newImagePreviewContainer');const p=document.getElementById('newImagePreview');if(u){p.src=u;p.onerror=()=>c.classList.add('hidden');p.onload=()=>c.classList.remove('hidden');c.classList.remove('hidden')}else c.classList.add('hidden');}
     function handleAddContent(e){
         e.preventDefault();
@@ -691,9 +652,6 @@
     }
     function deleteContent(type,id){if(confirm('¿Eliminar?')){contentDB[type]=contentDB[type].filter(i=>i.id!==id);save('eei_content',contentDB);renderExistingContent();}}
 
-    // ============================================
-    // PDF GENERATOR (FORMATEADO)
-    // ============================================
     function generateFormattedPDF(title, contentHtml, meta, footer) {
         const tempDiv = document.createElement('div');
         tempDiv.className = 'pdf-formatted';
@@ -732,9 +690,6 @@
         generateFormattedPDF('Equipo de Colaboradores', html, `Total: ${colaboradores.length} colaboradores`); 
     }
 
-    // ============================================
-    // NAVEGACIÓN & RENDERIZADO
-    // ============================================
     function navigateTo(page){
         const section = sectionConfig.find(s=>s.id===page);
         document.querySelectorAll('.page-section').forEach(s=>{s.classList.remove('visible-page');s.classList.add('hidden-page')});
@@ -840,9 +795,6 @@
         document.body.appendChild(modal);
     }
 
-    // ============================================
-    // UTILS & INIT
-    // ============================================
     function toggleDarkMode(){document.documentElement.classList.toggle('dark');localStorage.setItem('theme',document.documentElement.classList.contains('dark')?'dark':'light');document.getElementById('sunIcon').classList.toggle('hidden',!document.documentElement.classList.contains('dark'));document.getElementById('moonIcon').classList.toggle('hidden',document.documentElement.classList.contains('dark'));}
     function initTheme(){const saved=localStorage.getItem('theme');const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;if(saved==='dark'||(!saved&&prefersDark)){document.documentElement.classList.add('dark');document.getElementById('sunIcon').classList.remove('hidden');document.getElementById('moonIcon').classList.add('hidden');}}
     function toggleMobileMenu(){document.getElementById('mobileMenu').classList.toggle('hidden');document.getElementById('menuOpenIcon').classList.toggle('hidden');document.getElementById('menuCloseIcon').classList.toggle('hidden');}
@@ -858,9 +810,7 @@
         document.getElementById('cookiesContent').innerHTML = legalTexts.cookies;
         checkSecureAccess();
     }
-    document.addEventListener('DOMContentLoaded',init);
 
-    // Script de Netlify Identity para el panel de administración
     if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {
             if (!user) {
