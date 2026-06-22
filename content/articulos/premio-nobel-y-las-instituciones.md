@@ -16,8 +16,6 @@ image: /images/uploads/nobel-y-las-instituciones.png
 ---
 Un poco de historia: Hace dieciocho años y días, específicamente, el viernes 1 de septiembre del 2006, el ahora, expresidente López Obrador, después del fraude electoral que sufrió, expresó: "¡Ya decidimos hacer a un lado esas instituciones caducas que no sirven para nada e impulsar la revolución de la conciencia para que el pueblo decida, ¡que se vayan al diablo con sus instituciones!, ¡Vamos a tener un Gobierno de la República!" 
 
-
-
     Es muy probable que se estaba refiriendo a las instituciones informales que se habían enquistado en la convivencia nacional. En el 2018, ya como presidente de la república, se lanzó a la tarea de constituir, transformar o destruir —que cada lector use el verbo que mejor le parezca— las instituciones vigentes de ese momento. 
 
     En esa misma línea, el 14 de octubre de 2024, la Real Academia de las Ciencias de Suecia, anunció que James Robinson, Daron Acemoglu, y Simon Johnson obtuvieron el denominado mediáticamente Premio Nobel de Economía 2024, “por sus estudios sobre cómo se forman las instituciones y afectan a la prosperidad". Entre las aportaciones más conocidas de estos condecorados, se reconoce el libro de Daron Acemoglu y James A. Robinson, titulado Por qué fracasan los países: Los orígenes del poder, la prosperidad y la pobreza. 
@@ -57,3 +55,5 @@ Desde mi óptica, la modificación es correcta en su conceptualización; su impl
 ```
 
 ```
+
+![]()
